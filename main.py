@@ -7,6 +7,7 @@ from scoreboard import Scoreboard
 screen = Screen()
 screen.setup(600, 600)
 screen.bgcolor("black")
+screen.title("Snake Game")
 screen. tracer(0)
 
 snake = Snake()
@@ -26,6 +27,8 @@ screen.onkey(fun=snake.right, key="Right")
 game_is_on = True
 there_is_special_food = False
 did_eat_it = True
+counter = 2
+
 while game_is_on:
     screen.update()
     time.sleep(0.1)
@@ -64,5 +67,11 @@ while game_is_on:
             there_is_special_food = False
             did_eat_it = False
 
+        counter += 1
+
+    if counter % 2 == 0:
+        special_food.hideturtle()
+    else:
+        special_food.showturtle()
 
 screen.exitonclick()
