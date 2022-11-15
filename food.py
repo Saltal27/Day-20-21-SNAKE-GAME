@@ -14,9 +14,9 @@ class Food(Turtle):
         self.penup()
         self.shapesize(stretch_wid=food_stretch_wid, stretch_len=food_stretch_len)
         self.color(food_color)
-        self.refresh()
+        self.refresh_position()
 
-    def refresh(self):
+    def refresh_position(self):
         food_x = random.randint(-270, 270)
         food_y = random.randint(-270, 270)
         self.goto(food_x, food_y)

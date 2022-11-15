@@ -76,6 +76,10 @@ class Snake:
             if self.snake[segment_num].ycor() < -280:
                 self.snake[segment_num].sety(280)
 
+    def closed_box(self):
+        if self.head.xcor() > 280 or self.head.xcor() < -280 or self.head.ycor() > 280 or self.head.ycor() < -280:
+            return True
+
     def change_location(self, location_x, location_y, snake_heading):
         for segment in self.snake:
             segment.goto(location_x, location_y)
@@ -83,6 +87,7 @@ class Snake:
                 location_x -= 20
             elif snake_heading == "LEFT":
                 location_x += 20
+                segment.setheading(LEFT)
 
     def up(self):
         if self.head.heading() != DOWN:

@@ -8,7 +8,11 @@ screen = Screen()
 screen.setup(600, 600)
 screen.bgcolor("black")
 screen.title("Snake Game")
-screen. tracer(0)
+screen.tracer(0)
+
+game_mode = screen.textinput(title="Game mode", prompt="Which mode would you like to choose?"
+                                                       "\ntype 'i' for Infinite mode"
+                                                       " / 'c' for 'Closed box mode'").lower()
 
 snake = Snake()
 food = Food()
@@ -27,17 +31,22 @@ screen.onkey(fun=snake.right, key="Right")
 game_is_on = True
 there_is_special_food = False
 did_eat_it = True
-counter = 2
+counter = 3
 
 while game_is_on:
     screen.update()
     time.sleep(0.1)
     snake.move()
-    snake.infinite_walls()
+    if game_mode == "i":
+        snake.infinite_walls()
+    elif game_mode == "c":
+        if snake.closed_box():
+            game_is_on = False
+            scoreboard.game_over()
     timer.move()
 
     if snake.head.distance(food) < 15:
-        food.refresh()
+        food.refresh_position()
         scoreboard.increase_score()
         snake.extend()
         did_eat_it = True
@@ -49,7 +58,7 @@ while game_is_on:
 
     if scoreboard.score % 5 == 0 and scoreboard.score > 0 and did_eat_it:
         if not there_is_special_food:
-            special_food.refresh()
+            special_food.refresh_position()
             timer.change_location(-280, -295, "LEFT")
             there_is_special_food = True
 
@@ -69,7 +78,7 @@ while game_is_on:
 
         counter += 1
 
-    if counter % 2 == 0:
+    if counter % 3 == 0:
         special_food.hideturtle()
     else:
         special_food.showturtle()
