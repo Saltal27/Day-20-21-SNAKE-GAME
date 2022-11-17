@@ -35,7 +35,7 @@ counter = 3
 
 while game_is_on:
     screen.update()
-    time.sleep(0.1)
+    time.sleep(0.08)
     snake.move()
     if game_mode == "i":
         snake.infinite_walls()
