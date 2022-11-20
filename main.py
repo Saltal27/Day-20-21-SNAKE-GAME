@@ -28,11 +28,40 @@ screen.onkey(fun=snake.down, key="Down")
 screen.onkey(fun=snake.left, key="Left")
 screen.onkey(fun=snake.right, key="Right")
 
+
+def refresh_game():
+    global snake
+    global scoreboard
+    global food
+
+    snake.change_location(-1000, -1000, "right")
+    snake = Snake()
+    scoreboard.refresh_highest_score()
+    scoreboard.score = 0
+    scoreboard.refresh_scoreboard()
+    
+    screen.onkey(fun=snake.up, key="Up")
+    screen.onkey(fun=snake.down, key="Down")
+    screen.onkey(fun=snake.left, key="Left")
+    screen.onkey(fun=snake.right, key="Right")
+
+    return snake
+
+
+def hide_special_food():
+    global special_food
+    global there_is_special_food
+    global timer
+
+    there_is_special_food = False
+    special_food.goto(1000, 1000)
+    timer.change_location(1000, 1000, "LEFT")
+
+
 game_is_on = True
 there_is_special_food = False
 did_eat_it = True
 counter = 3
-
 while game_is_on:
     screen.update()
     time.sleep(0.08)
@@ -41,8 +70,10 @@ while game_is_on:
         snake.infinite_walls()
     elif game_mode == "c":
         if snake.closed_box():
-            game_is_on = False
-            scoreboard.game_over()
+            snake = refresh_game()
+            food.refresh_position()
+            if there_is_special_food:
+                hide_special_food()
     timer.move()
 
     if snake.head.distance(food) < 15:
@@ -53,8 +84,10 @@ while game_is_on:
 
     for segment in snake.snake[1:]:
         if snake.head.distance(segment) < 10:
-            game_is_on = False
-            scoreboard.game_over()
+            snake = refresh_game()
+            food.refresh_position()
+            if there_is_special_food:
+                hide_special_food()
 
     if scoreboard.score % 5 == 0 and scoreboard.score > 0 and did_eat_it:
         if not there_is_special_food:
@@ -66,14 +99,10 @@ while game_is_on:
         if snake.head.distance(special_food) < 25:
             scoreboard.increase_score(increase_amount=2)
             snake.extend(segments_num=2)
-            special_food.goto(1000, 1000)
-            timer.change_location(1000, 1000, "LEFT")
-            there_is_special_food = False
+            hide_special_food()
 
         if timer.snake[len(timer.snake) - 1].xcor() < -280:
-            special_food.goto(1000, 1000)
-            timer.change_location(1000, 1000, "LEFT")
-            there_is_special_food = False
+            hide_special_food()
             did_eat_it = False
 
         counter += 1
